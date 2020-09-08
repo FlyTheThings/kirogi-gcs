@@ -108,7 +108,7 @@ void GStreamerIntegration::updateGstPipeline()
 
     if (pipeline.isEmpty()) {
         qCDebug(videoLogging) << "Empty pipeline, using snow pattern.";
-        pipeline = QLatin1String("videotestsrc pattern=snow ! video/x-raw,width=800,height=450 !");
+        pipeline = QStringLiteral("videotestsrc pattern=snow ! video/x-raw,width=800,height=450 !");
     }
     pipeline += QStringLiteral("glupload ! glcolorconvert ! qmlglsink name=sink force-aspect-ratio=false");
 
@@ -199,7 +199,7 @@ void GStreamerIntegration::takeSnapshot()
     if (savePath.isEmpty()) {
         savePath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
     }
-    savePath += "/" + QDateTime::currentDateTime().toString("yyyy-MM-dd_hh.mm.ss") + ".png";
+    savePath += "/" + QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd_hh.mm.ss")) + ".png";
 
     if (image.save(savePath)) {
         qCDebug(videoLogging) << "Image saved in" << savePath;

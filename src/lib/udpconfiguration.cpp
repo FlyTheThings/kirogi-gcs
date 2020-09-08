@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Eike Hein <hein@kde.org>
+ * Copyright 2020 Kitae Kim <develoot@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,28 +18,38 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "qtquickplugin.h"
+#include "udpconfiguration.h"
 
-#include "abstractvehicle.h"
-#include "parametermodel.h"
-#include "vehiclesupportplugin.h"
-#include "vehiclesupportpluginmodel.h"
-
-#include "positionsource/positionsource.h"
-
-#include <QQmlEngine>
+#include "debug.h"
 
 namespace Kirogi
 {
-void QtQuickPlugin::registerTypes(const char *uri)
+UdpConfiguration::UdpConfiguration()
+    : ConnectionConfiguration()
 {
-    Q_ASSERT(uri == QStringLiteral("org.kde.kirogi"));
+}
 
-    qmlRegisterUncreatableType<AbstractVehicle>(uri, 0, 1, "AbstractVehicle", "AbstractVehicle cannot be created from QML.");
+UdpConfiguration::~UdpConfiguration()
+{
+}
 
-    qmlRegisterType<VehicleSupportPluginModel>(uri, 0, 1, "VehicleSupportPluginModel");
-    qRegisterMetaType<ParameterModel *>("ParameterModel*");
+QHostAddress UdpConfiguration::host() const
+{
+    return m_host.address;
+}
 
-    qmlRegisterSingletonType<PositionSource>(uri, 0, 1, "PositionSource", PositionSource::qmlSingletonRegister);
+void UdpConfiguration::setHost(QHostAddress host)
+{
+    m_host.address = host;
+}
+
+int UdpConfiguration::port() const
+{
+    return m_host.port;
+}
+
+void UdpConfiguration::setPort(int port)
+{
+    m_host.port = port;
 }
 }

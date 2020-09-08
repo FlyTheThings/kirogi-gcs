@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Eike Hein <hein@kde.org>
+ * Copyright 2020 Kitae Kim <develoot@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,28 +18,36 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "qtquickplugin.h"
+#include "mavlinkpluginconfig.h"
 
-#include "abstractvehicle.h"
-#include "parametermodel.h"
-#include "vehiclesupportplugin.h"
-#include "vehiclesupportpluginmodel.h"
-
-#include "positionsource/positionsource.h"
-
-#include <QQmlEngine>
-
-namespace Kirogi
+MAVLinkPluginConfig::MAVLinkPluginConfig()
+    // System id of GCS starts from top range.
+    // See: https://mavlink.io/en/guide/routing.html
+    : m_sysid(255)
+    , m_compid(0)
 {
-void QtQuickPlugin::registerTypes(const char *uri)
-{
-    Q_ASSERT(uri == QStringLiteral("org.kde.kirogi"));
-
-    qmlRegisterUncreatableType<AbstractVehicle>(uri, 0, 1, "AbstractVehicle", "AbstractVehicle cannot be created from QML.");
-
-    qmlRegisterType<VehicleSupportPluginModel>(uri, 0, 1, "VehicleSupportPluginModel");
-    qRegisterMetaType<ParameterModel *>("ParameterModel*");
-
-    qmlRegisterSingletonType<PositionSource>(uri, 0, 1, "PositionSource", PositionSource::qmlSingletonRegister);
 }
+
+MAVLinkPluginConfig::~MAVLinkPluginConfig()
+{
+}
+
+int MAVLinkPluginConfig::sysid() const
+{
+    return m_sysid;
+}
+
+void MAVLinkPluginConfig::setSysid(int sysid)
+{
+    m_sysid = sysid;
+}
+
+int MAVLinkPluginConfig::compid() const
+{
+    return m_compid;
+}
+
+void MAVLinkPluginConfig::setCompid(int compid)
+{
+    m_compid = compid;
 }

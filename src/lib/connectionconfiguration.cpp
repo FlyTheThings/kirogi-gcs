@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Eike Hein <hein@kde.org>
+ * Copyright 2020 Kitae Kim <develoot@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,28 +18,35 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "qtquickplugin.h"
+#include "connectionconfiguration.h"
 
-#include "abstractvehicle.h"
-#include "parametermodel.h"
-#include "vehiclesupportplugin.h"
-#include "vehiclesupportpluginmodel.h"
-
-#include "positionsource/positionsource.h"
-
-#include <QQmlEngine>
+#include "debug.h"
 
 namespace Kirogi
 {
-void QtQuickPlugin::registerTypes(const char *uri)
+ConnectionConfiguration::ConnectionConfiguration()
+    : m_name("Unnamed")
+    , m_autoconnect(false)
 {
-    Q_ASSERT(uri == QStringLiteral("org.kde.kirogi"));
+}
 
-    qmlRegisterUncreatableType<AbstractVehicle>(uri, 0, 1, "AbstractVehicle", "AbstractVehicle cannot be created from QML.");
+QString ConnectionConfiguration::name() const
+{
+    return m_name;
+}
 
-    qmlRegisterType<VehicleSupportPluginModel>(uri, 0, 1, "VehicleSupportPluginModel");
-    qRegisterMetaType<ParameterModel *>("ParameterModel*");
+void ConnectionConfiguration::setName(const QString &name)
+{
+    m_name = name;
+}
 
-    qmlRegisterSingletonType<PositionSource>(uri, 0, 1, "PositionSource", PositionSource::qmlSingletonRegister);
+bool ConnectionConfiguration::autoconnect() const
+{
+    return m_autoconnect;
+}
+
+void ConnectionConfiguration::setAutoconnect(bool autoconnect)
+{
+    m_autoconnect = autoconnect;
 }
 }

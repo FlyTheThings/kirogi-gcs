@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Eike Hein <hein@kde.org>
+ * Copyright 2020 Kitae Kim <develoot@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,28 +18,44 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "qtquickplugin.h"
+#pragma once
 
-#include "abstractvehicle.h"
-#include "parametermodel.h"
-#include "vehiclesupportplugin.h"
-#include "vehiclesupportpluginmodel.h"
+#include <QObject>
+#include <QString>
 
-#include "positionsource/positionsource.h"
+#include "kirogicore_export.h"
 
-#include <QQmlEngine>
-
+/**
+ * A class that stores common properties of connections.
+ *
+ * This class provides interfaces to read/write properties to QML.
+ */
 namespace Kirogi
 {
-void QtQuickPlugin::registerTypes(const char *uri)
+class KIROGI_EXPORT ConnectionConfiguration
 {
-    Q_ASSERT(uri == QStringLiteral("org.kde.kirogi"));
+    Q_GADGET
 
-    qmlRegisterUncreatableType<AbstractVehicle>(uri, 0, 1, "AbstractVehicle", "AbstractVehicle cannot be created from QML.");
+    Q_PROPERTY(QString name READ name WRITE setName)
+    Q_PROPERTY(bool autoconnect READ autoconnect WRITE setAutoconnect)
+    Q_PROPERTY(Type type READ type CONSTANT)
 
-    qmlRegisterType<VehicleSupportPluginModel>(uri, 0, 1, "VehicleSupportPluginModel");
-    qRegisterMetaType<ParameterModel *>("ParameterModel*");
+public:
+    enum class Type { UDP, TCP, Serial };
+    Q_ENUM(Type);
 
-    qmlRegisterSingletonType<PositionSource>(uri, 0, 1, "PositionSource", PositionSource::qmlSingletonRegister);
-}
+    ConnectionConfiguration();
+    virtual ~ConnectionConfiguration() = default;
+
+    QString name() const;
+    bool autoconnect() const;
+    virtual Type type() const = 0;
+
+    void setName(const QString &name);
+    void setAutoconnect(bool autoconnect);
+
+private:
+    QString m_name;
+    bool m_autoconnect;
+};
 }

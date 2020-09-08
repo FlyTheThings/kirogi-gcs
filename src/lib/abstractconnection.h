@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Eike Hein <hein@kde.org>
+ * Copyright 2020 Kitae Kim <develoot@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,32 +20,50 @@
 
 #pragma once
 
-#include "abstractpluginmodel.h"
+#include "connectionconfiguration.h"
+
+#include <QObject>
 
 #include "kirogicore_export.h"
 
 namespace Kirogi
 {
-class VehicleSupportPlugin;
-
-class KIROGI_EXPORT VehicleSupportPluginModel : public AbstractPluginModel
+/**
+ * An abstract class of UDP, TCP and Serial connections.
+ *
+ * Plugin authors have to inherit this class to implement their own connection class.
+ */
+class KIROGI_EXPORT AbstractConnection : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(ConnectionConfiguration *configuration READ configuration CONSTANT)
+    Q_PROPERTY(State state READ state NOTIFY stateChanged)
+
 public:
-    enum AdditionalRoles { Id = Qt::UserRole + 1, Status, Plugin };
-    Q_ENUM(AdditionalRoles)
+    enum class State { Disconnected, Connected };
+    Q_ENUM(State);
 
-    enum PluginStatus { PluginNotLoaded = 0, PluginLoaded = 1 };
-    Q_ENUM(PluginStatus)
+    AbstractConnection(QObject *parent = nullptr);
+    ~AbstractConnection();
 
-    explicit VehicleSupportPluginModel(QObject *parent = nullptr);
-    ~VehicleSupportPluginModel() override;
+    virtual bool connect() = 0;
+    virtual bool disconnect() = 0;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    virtual ConnectionConfiguration *configuration() = 0;
+
+    State state() const;
+
+Q_SIGNALS:
+    void stateChanged();
+
+public Q_SLOTS:
+    virtual void sendBytes(const QByteArray &bytes) = 0;
 
 protected:
-    QObject *requestFromFactory(KPluginFactory *factory) override;
-};
+    void setState(State state);
 
+private:
+    State m_state;
+};
 }

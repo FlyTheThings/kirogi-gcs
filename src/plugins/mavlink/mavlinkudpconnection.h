@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Eike Hein <hein@kde.org>
+ * Copyright 2020 Kitae Kim <develoot@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,28 +18,38 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "qtquickplugin.h"
+#pragma once
 
-#include "abstractvehicle.h"
-#include "parametermodel.h"
-#include "vehiclesupportplugin.h"
-#include "vehiclesupportpluginmodel.h"
+#include "udpconfiguration.h"
 
-#include "positionsource/positionsource.h"
+#include "mavlinkconnection.h"
 
-#include <QQmlEngine>
+#include <QHostAddress>
+#include <QSharedPointer>
+#include <QUdpSocket>
 
-namespace Kirogi
+/**
+ * An UDP connection implementation of mavlink plugin.
+ */
+class MAVLinkUdpConnection : public MAVLinkConnection
 {
-void QtQuickPlugin::registerTypes(const char *uri)
-{
-    Q_ASSERT(uri == QStringLiteral("org.kde.kirogi"));
+    Q_OBJECT
 
-    qmlRegisterUncreatableType<AbstractVehicle>(uri, 0, 1, "AbstractVehicle", "AbstractVehicle cannot be created from QML.");
+public:
+    MAVLinkUdpConnection(Kirogi::UdpConfiguration configuration, uint8_t channel, QObject *parent = nullptr);
+    ~MAVLinkUdpConnection();
 
-    qmlRegisterType<VehicleSupportPluginModel>(uri, 0, 1, "VehicleSupportPluginModel");
-    qRegisterMetaType<ParameterModel *>("ParameterModel*");
+    Kirogi::ConnectionConfiguration *configuration() override;
 
-    qmlRegisterSingletonType<PositionSource>(uri, 0, 1, "PositionSource", PositionSource::qmlSingletonRegister);
-}
-}
+    bool connect() override;
+    bool disconnect() override;
+
+public Q_SLOTS:
+    void processDataOnSocket();
+    void sendBytes(const QByteArray &bytes) override;
+
+private:
+    QSharedPointer<QUdpSocket> m_socket;
+    Kirogi::UdpConfiguration m_configuration;
+    QVector<Kirogi::UdpConfiguration::UdpClient> m_targets;
+};

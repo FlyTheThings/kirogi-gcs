@@ -6,8 +6,12 @@ ecm_setup_version(PROJECT
 
 set(kirogicore_SRCS
     abstractvehicle.cpp
+    abstractconnection.cpp
+    abstractpluginmodel.cpp
     vehiclesupportplugin.cpp
     vehiclesupportpluginmodel.cpp
+    connectionconfiguration.cpp
+    udpconfiguration.cpp
 )
 
 ecm_qt_declare_logging_category(kirogicore_SRCS
@@ -19,13 +23,18 @@ ecm_qt_declare_logging_category(kirogicore_SRCS
 ecm_generate_headers(Kirogi_CamelCase_HEADERS
     HEADER_NAMES
         AbstractVehicle
+        AbstractConnection
+        AbstractPluginModel
         VehicleSupportPlugin
         VehicleSupportPluginModel
+        ConnectionConfiguration
+        UdpConfiguration
     REQUIRED_HEADERS Kirogi_HEADERS
     PREFIX kirogi
 )
 
 add_subdirectory(positionsource)
+add_subdirectory(settings)
 add_subdirectory(vehicleparameters)
 
 add_library(kirogicore SHARED ${kirogicore_SRCS} ${Kirogi_HEADERS})
@@ -67,7 +76,9 @@ target_link_libraries(kirogicore
         Qt5::Qml
         Qt5::Quick
         KF5::CoreAddons
+
         positionsource
+        settings
         vehicleparameters
 )
 
@@ -122,8 +133,11 @@ target_link_libraries(kirogiqtquickplugin
     Qt5::Positioning
     Qt5::Qml
     Qt5::Quick
+    KF5::CoreAddons
+
     KirogiCore
     positionsource
+    settings
     vehicleparameters
     )
 

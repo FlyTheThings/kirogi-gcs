@@ -71,52 +71,8 @@ Kirigami.Page {
         }
     }
 
-    Image {
-        id: cameraStream
-
+    VideoElement {
         anchors.fill: parent
-
-        fillMode: Image.PreserveAspectCrop
-        smooth: true
-
-        source: "fallback.jpg"
-
-        Connections {
-            target: kirogi
-
-            onCurrentVehicleChanged: {
-                videoSurface.playing = kirogi.currentVehicle != null;
-            }
-
-            onCurrentPageChanged: {
-                videoSurface.playing = (kirogi.currentPage == page || kirogi.currentVehicle);
-            }
-        }
-
-        KirogiVideo.VideoReceiver {
-            id: videoReceiver
-            stringPipeline: kirogi.currentVehicle ? kirogi.currentVehicle.videoSource : ""
-        }
-
-        KirogiVideo.VideoSurface {
-            id: videoSurface
-            videoReceiver: videoReceiver
-
-            width: parent.width
-            height: kirogiSettings.stretchVideo ? parent.height : parent.width / 1.77
-        }
-
-        Rectangle {
-            id: videoOverlay
-
-            anchors.fill: parent
-
-            visible: !kirogi.currentVehicle || kirogi.currentVehicle.videoSource === ""
-
-            opacity: 0.4
-
-            color: "black"
-        }
     }
 
     // FIXME TODO: This is a workaround around the org.kde.desktop+Breeze style engine
@@ -162,7 +118,6 @@ Kirigami.Page {
         anchors.left: parent.left
         anchors.leftMargin: leftPillBox.y
 
-        background: cameraStream
         icon: kirogi.currentVehicle ? kirogi.currentVehicle.iconName : "uav"
         toolTipText: i18nc("%1 = Keyboard shortcut", "Drone (%1)", vehiclePageAction.shortcut)
 
@@ -198,7 +153,6 @@ Kirigami.Page {
             return "red";
         }
 
-        background: cameraStream
         backgroundColor: "dark" + __color
         backgroundOpacity: 0.4
 
@@ -267,7 +221,6 @@ Kirigami.Page {
         anchors.right: parent.right
         anchors.rightMargin: leftButton.anchors.leftMargin
 
-        background: cameraStream
         icon: "map-flat"
         toolTipText: i18nc("%1 = Keyboard shortcut", "Navigation Map (%1)", navigationMapPageAction.shortcut)
 
@@ -281,8 +234,6 @@ Kirigami.Page {
 
         anchors.left: parent.left
         anchors.verticalCenter: shotButton.verticalCenter
-
-        background: cameraStream
 
         selectedMode: {
             if (kirogi.ready) {
@@ -365,8 +316,6 @@ Kirigami.Page {
 
         property int requestedMode: 0
 
-        background: cameraStream
-
         firstModeEnabled: enabled && kirogi.currentVehicle.isActionSupported(Kirogi.AbstractVehicle.RecordVideo)
         secondModeEnabled: enabled && kirogi.currentVehicle.isActionSupported(Kirogi.AbstractVehicle.TakePicture)
 
@@ -408,8 +357,6 @@ Kirigami.Page {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: launchButton.anchors.topMargin
 
-        background: cameraStream
-
         icon: "media-record-symbolic"
         iconColor: shotMode.selectedMode == 0 && (kirogi.currentVehicle && kirogi.currentVehicle.isRecordingVideo) ? "red" : "white"
         toolTipText: {
@@ -448,7 +395,6 @@ Kirigami.Page {
         width: Math.min(yardstick * 0.45, parent.width / 4)
         height: width
 
-        background: cameraStream
         leftIcon: "edit-undo"
         leftToolTipText: i18n("Turn Left")
         rightIcon: "edit-redo"
@@ -545,7 +491,6 @@ Kirigami.Page {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: leftDPad.anchors.bottomMargin
 
-        background: cameraStream
         leftIcon: "go-previous"
         leftToolTipText: i18n("Move Left")
         rightIcon: "go-next"
@@ -637,8 +582,6 @@ Kirigami.Page {
 
         width: leftPillBoxContents.implicitWidth + Kirigami.Units.largeSpacing * 4
         height: 2 * Math.round((Math.max(Kirigami.Units.iconSizes.small, fontMetrics.height) + Kirigami.Units.smallSpacing * 3) / 2);
-
-        background: cameraStream
 
         Row {
             id: leftPillBoxContents
@@ -764,8 +707,6 @@ Kirigami.Page {
 
         width: rightPillBoxContents.implicitWidth + Kirigami.Units.largeSpacing * 4
         height: leftPillBox.height
-
-        background: cameraStream
 
        Row {
            id: rightPillBoxContents

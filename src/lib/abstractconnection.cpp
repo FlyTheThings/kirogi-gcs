@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Eike Hein <hein@kde.org>
+ * Copyright 2020 Kitae Kim <develoot@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,28 +18,34 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "qtquickplugin.h"
+#include <abstractconnection.h>
 
-#include "abstractvehicle.h"
-#include "parametermodel.h"
-#include "vehiclesupportplugin.h"
-#include "vehiclesupportpluginmodel.h"
-
-#include "positionsource/positionsource.h"
-
-#include <QQmlEngine>
+#include "debug.h"
 
 namespace Kirogi
 {
-void QtQuickPlugin::registerTypes(const char *uri)
+AbstractConnection::AbstractConnection(QObject *parent)
+    : QObject(parent)
+    , m_state(State::Disconnected)
 {
-    Q_ASSERT(uri == QStringLiteral("org.kde.kirogi"));
+}
 
-    qmlRegisterUncreatableType<AbstractVehicle>(uri, 0, 1, "AbstractVehicle", "AbstractVehicle cannot be created from QML.");
+AbstractConnection::~AbstractConnection()
+{
+}
 
-    qmlRegisterType<VehicleSupportPluginModel>(uri, 0, 1, "VehicleSupportPluginModel");
-    qRegisterMetaType<ParameterModel *>("ParameterModel*");
+AbstractConnection::State AbstractConnection::state() const
+{
+    return m_state;
+}
 
-    qmlRegisterSingletonType<PositionSource>(uri, 0, 1, "PositionSource", PositionSource::qmlSingletonRegister);
+void AbstractConnection::setState(State state)
+{
+    if (m_state == state) {
+        return;
+    }
+
+    m_state = state;
+    emit stateChanged();
 }
 }
