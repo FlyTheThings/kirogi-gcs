@@ -168,6 +168,11 @@ else()
         gstopengl
         gstlibav
         x264
+        # Android system libs
+        ${liblog}
+        ${libandroid}
+        ${libEGL}
+        ${libGLESv2}
         # Optional
         gstandroidmedia
         gstphotography-1.0
@@ -175,4 +180,4 @@ else()
     )
 endif()
 
-install(TARGETS kirogi ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kirogi ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

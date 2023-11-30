@@ -73,7 +73,7 @@ RyzeTelloVehicle::RyzeTelloVehicle(QObject *parent)
 
     QObject::connect(m_connection, &RyzeTelloConnection::stateReceived, this, &RyzeTelloVehicle::processIncomingState, Qt::QueuedConnection);
 
-    // Do the networking on a seperate thread, so our fixed-tick work never gets
+    // Do the networking on a separate thread, so our fixed-tick work never gets
     // blocked by activity on the main thread.
     m_connection->moveToThread(&m_connectionThread);
     QObject::connect(&m_connectionThread, &QThread::finished, m_connection, &QObject::deleteLater);
@@ -395,7 +395,8 @@ void RyzeTelloVehicle::initVehicle()
 void RyzeTelloVehicle::sendCommand(const QString &command, bool retryForever)
 {
     if (connectionState() < Connecting) {
-        qCWarning(KIROGI_VEHICLESUPPORT_RYZETELLO) << name() << "Request to send command" << command << "rejected. Connection not ready. Current connection state:" << connectionState();
+        qCWarning(KIROGI_VEHICLESUPPORT_RYZETELLO) << name() << "Request to send command" << command
+                                                   << "rejected. Connection not ready. Current connection state:" << connectionState();
         return;
     }
 

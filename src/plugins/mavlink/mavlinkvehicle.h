@@ -37,9 +37,9 @@ class MAVLinkVehicle : public Kirogi::AbstractVehicle
 
 public:
     struct Configuration {
-        uint8_t sysid;  ///< System id that is used to identify vehicle on network.
+        uint8_t sysid; ///< System id that is used to identify vehicle on network.
         uint8_t compid; ///< Default component id of vehicle.
-        MAV_TYPE type;  ///< Type of vehicle.
+        MAV_TYPE type; ///< Type of vehicle.
         QString name;
     };
 
@@ -77,8 +77,8 @@ private Q_SLOTS:
 
 private:
     struct AltitudeSource {
-        bool altitudeMessage {false};
-        float altitude {0.0f};
+        bool altitudeMessage{false};
+        float altitude{0.0f};
     };
 
     struct CommandQueueItem {
@@ -88,8 +88,8 @@ private:
         uint8_t target_system;
         uint8_t target_component;
         uint8_t confirmation;
-        MAV_FRAME frame;      // Coordinate system of the command. (COMMAND_INT)
-        uint8_t current;      // False: 0, True: 1.
+        MAV_FRAME frame; // Coordinate system of the command. (COMMAND_INT)
+        uint8_t current; // False: 0, True: 1.
         uint8_t autocontinue; // Continue to next wp automatically.
     };
 

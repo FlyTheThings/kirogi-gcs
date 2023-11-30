@@ -45,7 +45,8 @@ Kirogi::ConnectionConfiguration *MAVLinkUdpConnection::configuration()
 bool MAVLinkUdpConnection::connect()
 {
     if (state() > State::Disconnected) {
-        qCDebug(KIROGI_VEHICLESUPPORT_MAVLINK_CONNECTION) << QString("Tried to create UDP connection %1 when it's not disconnected.").arg(m_configuration.name());
+        qCDebug(KIROGI_VEHICLESUPPORT_MAVLINK_CONNECTION)
+            << QString("Tried to create UDP connection %1 when it's not disconnected.").arg(m_configuration.name());
         return false;
     }
 
@@ -88,7 +89,9 @@ void MAVLinkUdpConnection::processDataOnSocket()
 {
     while (m_socket->hasPendingDatagrams()) {
         const QNetworkDatagram &datagram = m_socket->receiveDatagram();
-        auto checkOverlapped = [datagram](auto &target) { return datagram.senderAddress() == target.address && datagram.senderPort() == target.port; };
+        auto checkOverlapped = [datagram](auto &target) {
+            return datagram.senderAddress() == target.address && datagram.senderPort() == target.port;
+        };
 
         if (std::find_if(m_targets.begin(), m_targets.end(), checkOverlapped) == m_targets.end()) {
             m_targets.append({datagram.senderAddress(), datagram.senderPort()});
@@ -101,7 +104,8 @@ void MAVLinkUdpConnection::processDataOnSocket()
 void MAVLinkUdpConnection::sendBytes(const QByteArray &bytes)
 {
     if (state() < State::Connected) {
-        qCDebug(KIROGI_VEHICLESUPPORT_MAVLINK_CONNECTION) << QString("Tried to send bytes on connection %1 when it's not connected.").arg(m_configuration.name());
+        qCDebug(KIROGI_VEHICLESUPPORT_MAVLINK_CONNECTION)
+            << QString("Tried to send bytes on connection %1 when it's not connected.").arg(m_configuration.name());
         return;
     }
 

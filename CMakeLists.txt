@@ -3,7 +3,7 @@ find_package(ECM 5.54.0 REQUIRED NO_MODULE)
 set(CMAKE_CXX_STANDARD 17)
 set(CXX_STANDARD_REQUIRED ON)
 set(QT_MIN_VERSION "5.12.0")
-set(KF5_MIN_VERSION "5.54.0")
+set(KF_MIN_VERSION "5.84.0")
 
 project(kirogi VERSION 0.1)
 
@@ -11,7 +11,7 @@ set(CMAKE_AUTOMOC ON)
 set(AUTOMOC_MOC_OPTIONS -Muri=org.kde.kirogi)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
 include(CMakePackageConfigHelpers)
@@ -97,13 +97,15 @@ find_package(Qt5 ${QT_MIN_VERSION} REQUIRED NO_MODULE COMPONENTS
     ${qtAndroidComponents}
 )
 
-find_package(KF5 ${KF5_MIN_VERSION} REQUIRED
+find_package(KF5 ${KF_MIN_VERSION} REQUIRED
     ConfigWidgets
     CoreAddons
     I18n
     Kirigami2
     ${kfDesktopComponents}
 )
+
+find_package(KF${QT_MAJOR_VERSION}KirigamiAddons 0.11 REQUIRED)
 
 find_package(PkgConfig REQUIRED)
 
@@ -140,6 +142,11 @@ if(ANDROID)
     )
 
     link_directories(${GSTREAMER_LIBRARY_DIRS}/gstreamer-1.0/)
+
+    find_library(liblog log)
+    find_library(libandroid android)
+    find_library(libEGL EGL)
+    find_library(libGLESv2 GLESv2)
 endif()
 
 if(COMPILE_QML)

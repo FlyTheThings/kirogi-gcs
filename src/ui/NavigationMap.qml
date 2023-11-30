@@ -81,10 +81,18 @@ Kirigami.Page {
                 name: "osm.mapping.highdpi_tiles"
                 value: Screen.devicePixelRatio > 1 ? "true" : "false"
             }
+            PluginParameter {
+                name: "osm.mapping.providersrepository.address"
+                value: "https://autoconfig.kde.org/qtlocation/"
+            }
+            PluginParameter {
+                name: "osm.useragent"
+                value: Qt.application.name + "/" + Qt.application.version + " (hein@kde.org)"
+            }
         }
 
         onMapReadyChanged: {
-// FIXME TODO: Preferrably get a satellite map.
+// FIXME TODO: Preferably get a satellite map.
 //             if (mapReady) {
 //                 for (var i = 0; i < supportedMapTypes.length; i++) {
 //                     if (supportedMapTypes[i].style == MapType.SatelliteMapDay) {

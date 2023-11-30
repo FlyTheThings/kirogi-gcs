@@ -132,7 +132,7 @@ Kirogi::AbstractVehicle::VehicleType MAVLinkVehicle::vehicleType() const
 
 QList<Kirogi::AbstractVehicle::VehicleAction> MAVLinkVehicle::supportedActions() const
 {
-    // TODO: Improve this to work with mavlink infraestructure
+    // TODO: Improve this to work with mavlink infrastructure
     QList<Kirogi::AbstractVehicle::VehicleAction> actions;
 
     actions << Kirogi::AbstractVehicle::TakeOff;
@@ -276,9 +276,9 @@ void MAVLinkVehicle::pilot(qint8 roll, qint8 pitch, qint8 yaw, qint8 gaz)
 
     manual_control.target = 1;
     manual_control.x = pitch * 10; // [-1000,1000] range
-    manual_control.y = roll * 10;  // [-1000,1000] range
-    manual_control.z = gaz * 10;   // [-1000,1000] range
-    manual_control.r = yaw * 10;   // [-1000,1000] range
+    manual_control.y = roll * 10; // [-1000,1000] range
+    manual_control.z = gaz * 10; // [-1000,1000] range
+    manual_control.r = yaw * 10; // [-1000,1000] range
     manual_control.buttons = 0;
 
     m_connection->sendMessage(manual_control);

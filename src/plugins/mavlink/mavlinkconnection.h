@@ -64,7 +64,8 @@ public:
     MAVLinkConnection(uint8_t channel, QObject *parent = nullptr);
     ~MAVLinkConnection();
 
-    template<typename T> constexpr void sendMessage(const T &message)
+    template<typename T>
+    constexpr void sendMessage(const T &message)
     {
         if constexpr (std::is_same<T, mavlink_message_t>::value) {
             const int length = mavlink_msg_to_send_buffer(m_buffer, &message);
@@ -96,6 +97,6 @@ protected:
 
 private:
     QTimer m_gcsHeartbeatTimer;
-    mavlink_message_t m_message;    ///< Used for parsing incoming mavlink messages.
+    mavlink_message_t m_message; ///< Used for parsing incoming mavlink messages.
     mutable uint8_t m_buffer[1024]; ///< Buffer that sendMessage() uses.
 };
