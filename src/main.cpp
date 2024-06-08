@@ -109,18 +109,12 @@ int main(int argc, char *argv[])
     aboutData.addAuthor(xi18nc("@info:credit", "L. 'AsmoArael' C."), xi18nc("@info:credit", "Mascot artwork"), QStringLiteral("lc.jarryh99@outlook.fr"));
 
     KAboutData::setApplicationData(aboutData);
-    QCommandLineParser parser;
-    parser.addHelpOption();
-    parser.addVersionOption();
 
+    QCommandLineParser parser;
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-    app.setApplicationName(aboutData.componentName());
-    app.setApplicationDisplayName(aboutData.displayName());
-    app.setOrganizationDomain(aboutData.organizationDomain());
-    app.setApplicationVersion(aboutData.version());
     app.setWindowIcon(QIcon::fromTheme(QStringLiteral("kirogi")));
 
 #ifndef Q_OS_ANDROID
